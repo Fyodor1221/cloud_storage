@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "STORAGE_FILES")
@@ -26,6 +29,7 @@ public class StorageFile {
     @Column(name = "SIZE", nullable = false)
     private long size;
 
-    @Column(name = "HASH_MD5")
-    private String hashMd5;
+    @UpdateTimestamp
+    @Column(name = "UPDATED_AT")
+    private LocalDateTime updatedAt;
 }

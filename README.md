@@ -1,7 +1,6 @@
-#Cloud storage
+## Cloud storage
 
-Сервис предоставляет REST-интерфейс для интеграции с <a href="https://github.com/netology-code/jd-homeworks/tree/master/diploma/netology-diplom-backend">FRONT</a> приложением.
-Сервис реализовывает следующие методы:
+Сервис предоставляет REST-интерфейс для интеграции с <a href="https://github.com/netology-code/jd-homeworks/tree/master/diploma/netology-diplom-backend">FRONT</a> приложением и реализует следующие методы:
 
     Вывод списка файлов        endpoint /cloud/list    метод GET
     Добавление файла           endpoint /cloud/file    метод POST

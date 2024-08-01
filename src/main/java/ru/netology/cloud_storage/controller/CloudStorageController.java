@@ -1,14 +1,19 @@
 package ru.netology.cloud_storage.controller;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.netology.cloud_storage.CloudStorageApplication;
+import ru.netology.cloud_storage.dto.FileDto;
 import ru.netology.cloud_storage.service.CloudStorageService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,6 +21,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class CloudStorageController {
     private CloudStorageService service;
+    private final Logger logger = LoggerFactory.getLogger(CloudStorageApplication.class);
 
     @PostMapping(path = {"/file"}, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Object> uploadFile(@RequestParam("filename") String fileName, @RequestParam MultipartFile file) {
@@ -41,7 +47,7 @@ public class CloudStorageController {
     }
 
     @GetMapping(path = {"/list"}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public @ResponseBody Map<String, Long> getAllFiles(@RequestParam("limit") int limit) {
-        return service.getAllFiles(limit);
+    public @ResponseBody List<FileDto> getFiles(@RequestParam("limit") int limit) {
+        return service.getFiles(limit);
     }
 }
