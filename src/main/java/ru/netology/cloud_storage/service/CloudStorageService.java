@@ -1,25 +1,24 @@
 package ru.netology.cloud_storage.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.ResponseBody;
-import ru.netology.cloud_storage.dto.FileDto;
-import ru.netology.cloud_storage.entity.StorageFile;
-import ru.netology.cloud_storage.exception.InvalidCredentials;
-import ru.netology.cloud_storage.exception.ServerFail;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.netology.cloud_storage.dto.FileDto;
+import ru.netology.cloud_storage.entity.StorageFile;
+import ru.netology.cloud_storage.exception.InvalidCredentials;
+import ru.netology.cloud_storage.exception.ServerFail;
 import ru.netology.cloud_storage.repository.CloudStorageRepository;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class CloudStorageService {
-    private final Logger logger = LoggerFactory.getLogger(CloudStorageService.class);
     private CloudStorageRepository repository;
 
     public void uploadFile(String fileName, MultipartFile file) {
@@ -38,17 +37,9 @@ public class CloudStorageService {
         storageFile.setSize(fileSize);
         try {
             storageFile.setData(file.getBytes());
-//            MessageDigest md5 = MessageDigest.getInstance("MD5");
-//            byte[] digest = md5.digest(storageFile.getData());
-//            String hashString = new BigInteger(1, digest).toString(16);
-//            storageFile.setHashMd5(hashString);
         } catch (IOException e) {
             throw new ServerFail("Error upload file");
-        }
-//        catch (NoSuchAlgorithmException e) {
-//            logger.info(e.getMessage());
-//        }
-        finally {
+        } finally {
             if (storageFile.getData() != null) {
                 repository.save(storageFile);
             }
@@ -71,13 +62,13 @@ public class CloudStorageService {
         return storageFile.getData();
     }
 
-    public void renameFile(String fileName, Map<String, String> map) {
-        Optional<StorageFile> storageFiles = repository.findStorageFileByFileName(fileName);
+    public void renameFile(String currentFileName, Map<String, String> body) {
+        Optional<StorageFile> storageFiles = repository.findStorageFileByFileName(currentFileName);
         if (storageFiles.isEmpty()) {
             throw new InvalidCredentials("File not found");
         }
-        String newFileName = map.get("name");
-        repository.updateFileNameById(fileName, newFileName);
+        String newFileName = body.get("filename");
+        repository.updateFileNameById(currentFileName, newFileName);
     }
 
     public List<FileDto> getFiles(int limit) {
@@ -85,8 +76,14 @@ public class CloudStorageService {
             throw new InvalidCredentials("Number of requested items must be positive");
         }
         List<FileDto> files = new ArrayList<>();
+
         for (StorageFile sf : repository.findAll(PageRequest.ofSize(limit))) {
-            files.add(new FileDto(sf.getFileName(), sf.getUpdatedAt(), sf.getSize()));
+            files.add(new FileDto(
+                    sf.getId(),
+                    sf.getFileName(),
+                    sf.getCreatedAt(),
+                    sf.getEditedAt(),
+                    sf.getSize()));
         }
         return files;
     }

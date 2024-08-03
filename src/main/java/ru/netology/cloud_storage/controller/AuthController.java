@@ -24,7 +24,7 @@ public class AuthController {
         String jwt = authenticationService.login(request.getLogin(), request.getPassword());
         Map<String, String> map = new HashMap<>();
         map.put("auth-token", jwt);
-        logger.info("TOKEN: {}", jwt);
+        logger.debug("TOKEN: {}", jwt);
         return map;
     }
 

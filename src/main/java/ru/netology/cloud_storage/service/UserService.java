@@ -28,14 +28,4 @@ public class UserService {
     public UserDetailsService userDetailsService() {
         return this::getByUserName;
     }
-
-    /**
-     * Получение текущего пользователя
-     *
-     * @return текущий пользователь
-     */
-    public User getCurrentUser() {
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getByUserName(username);
-    }
 }

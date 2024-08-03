@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "STORAGE_FILES")
@@ -30,6 +30,10 @@ public class StorageFile {
     private long size;
 
     @UpdateTimestamp
-    @Column(name = "UPDATED_AT")
-    private LocalDateTime updatedAt;
+    @Column(name = "CREATED_AT")
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "EDITED_AT")
+    private Date editedAt;
 }

@@ -34,7 +34,6 @@ public class JwtService {
         if (userDetails instanceof User customUserDetails) {
             claims.put("id", customUserDetails.getId());
             claims.put("role", customUserDetails.getRole());
-//            claims.put("logged", customUserDetails.isLoggedOut());
         }
         return generateToken(claims, userDetails);
     }

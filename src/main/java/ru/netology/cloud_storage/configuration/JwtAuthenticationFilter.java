@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         var jwt = authHeader.substring(BEARER_PREFIX.length());
 
-        logger.info("TOKEN from JwtAuthenticationFilter: {}", jwt);
+        logger.debug("TOKEN from JwtAuthenticationFilter: {}", jwt);
 
         if (!jwtService.getTokenBlackList().containsToken(jwt)) {
             var username = jwtService.extractUserName(jwt);

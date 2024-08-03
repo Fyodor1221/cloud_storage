@@ -20,8 +20,8 @@ import java.util.Map;
 @Transactional
 @AllArgsConstructor
 public class CloudStorageController {
-    private CloudStorageService service;
     private final Logger logger = LoggerFactory.getLogger(CloudStorageApplication.class);
+    private CloudStorageService service;
 
     @PostMapping(path = {"/file"}, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Object> uploadFile(@RequestParam("filename") String fileName, @RequestParam MultipartFile file) {
@@ -41,8 +41,11 @@ public class CloudStorageController {
     }
 
     @PutMapping(path = {"/file"}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Object> renameFile(@RequestParam("filename") String fileName, @RequestBody Map<String, String> map) {
-        service.renameFile(fileName, map);
+    public ResponseEntity<Object> renameFile(
+            @RequestParam("filename") String currentFileName,
+            @RequestBody Map<String, String> body) {
+        logger.debug(body.toString());
+        service.renameFile(currentFileName, body);
         return ResponseEntity.ok().build();
     }
 
